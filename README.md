@@ -1,5 +1,7 @@
 ## yaml for ESP32-Korvo-1
 
+Put partitions_esp32.csv into folder of homeassistant\config\esphome\
+
 ```
 substitutions:
   name: esp32-korvo-2
