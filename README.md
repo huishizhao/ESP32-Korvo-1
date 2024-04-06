@@ -94,10 +94,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "O3Zn+4BvPnzKWC6xTTX+f9UMgkfKNelD+VZ8mNJZADg="
+    key: "encryption key"
 
 ota:
-  password: "98b108276ee7a96bbd50bc50b1ac38c5"
+  password: "your password"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -106,7 +106,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Esp32-Korvo-2 Fallback Hotspot"
-    password: "bdo3OsXUY3Vn"
+    password: "ap password"
 
 captive_portal:
 
@@ -531,9 +531,6 @@ binary_sensor:
 #      - output.turn_off: pa_ctrl
 #      - light.turn_off:
 #          id: led_ring
-  - platform: template
-    name: "${friendly_name} SW3"
-    id: btn_SW3
 sensor:
   - id: button_adc
     platform: adc
@@ -548,13 +545,7 @@ sensor:
           send_first_at: 1
       - delta: 0.1
     on_value_range:
-      - below: 0.20
-        then:
-          - binary_sensor.template.publish:
-              id: btn_SW3
-              state: ON
-      - above: 0.30
-        below: 0.55
+      - below: 0.55
         then:
           - binary_sensor.template.publish:
               id: btn_volume_up
@@ -609,4 +600,5 @@ sensor:
           - binary_sensor.template.publish:
               id: btn_record
               state: OFF
+
 ````
