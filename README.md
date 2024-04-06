@@ -4,8 +4,8 @@ Put partitions_esp32.csv into folder of homeassistant\config\esphome\
 
 ```
 substitutions:
-  name: esp32-korvo-2
-  friendly_name: esp32-korvo-2
+  name: esp32-korvo-1
+  friendly_name: esp32-korvo-1
   voice_assist_idle_phase_id: "1"
   voice_assist_listening_phase_id: "2"
   voice_assist_thinking_phase_id: "3"
@@ -40,22 +40,14 @@ esphome:
             id: led_ring
             blue: 0%
             red: 100%
-            green: 0%
-            effect: Slow Pulse
-        - wait_until: api.connected
-        - light.turn_on:
-            id: led_ring
-            blue: 0%
-            red: 100%
             green: 50%
             effect: Slow Pulse
-        - if:
+        - wait_until: 
             condition:
-              lambda: return id(init_in_progress);
-            then:
-              - lambda: id(init_in_progress) = false;
-              - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
-              - script.execute: reset_led
+              api.connected
+        - lambda: id(init_in_progress) = false;
+        - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
+        - script.execute: reset_led
 esp32:
   board: esp-wrover-kit
   flash_size: 16MB
@@ -94,10 +86,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "O3Zn+4BvPnzKWC6xTTX+f9UMgkfKNelD+VZ8mNJZADg="
+    key: "vRvf5APYhFeBjsFt8zzQ6xpuiZqn3oCAIbyVHCBawWM="
 
 ota:
-  password: "98b108276ee7a96bbd50bc50b1ac38c5"
+  password: "9522b9fe61f659e429743438edf3240e"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -105,8 +97,8 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Esp32-Korvo-2 Fallback Hotspot"
-    password: "bdo3OsXUY3Vn"
+    ssid: "Esp32-Korvo-1 Fallback Hotspot"
+    password: "vBJEmQ5iJHQx"
 
 captive_portal:
 
@@ -502,21 +494,27 @@ binary_sensor:
   - platform: template
     name: "${friendly_name} Volume Up"
     id: btn_volume_up
+    publish_initial_state : True
   - platform: template
     name: "${friendly_name} Volume Down"
     id: btn_volume_down
+    publish_initial_state : True
   - platform: template
     name: "${friendly_name} Set"
     id: btn_set
+    publish_initial_state : True
   - platform: template
     name: "${friendly_name} Play"
     id: btn_play
+    publish_initial_state : True
   - platform: template
     name: "${friendly_name} Mode"
     id: btn_mode
+    publish_initial_state : True
   - platform: template
     name: "${friendly_name} Record"
     id: btn_record
+    publish_initial_state : True
     on_press:
       - voice_assistant.start:
       - light.turn_on:
@@ -531,9 +529,6 @@ binary_sensor:
 #      - output.turn_off: pa_ctrl
 #      - light.turn_off:
 #          id: led_ring
-  - platform: template
-    name: "${friendly_name} SW3"
-    id: btn_SW3
 sensor:
   - id: button_adc
     platform: adc
@@ -548,13 +543,7 @@ sensor:
           send_first_at: 1
       - delta: 0.1
     on_value_range:
-      - below: 0.20
-        then:
-          - binary_sensor.template.publish:
-              id: btn_SW3
-              state: ON
-      - above: 0.30
-        below: 0.55
+      - below: 0.55
         then:
           - binary_sensor.template.publish:
               id: btn_volume_up
@@ -609,4 +598,5 @@ sensor:
           - binary_sensor.template.publish:
               id: btn_record
               state: OFF
+
 ````
