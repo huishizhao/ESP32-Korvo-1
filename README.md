@@ -1,8 +1,7 @@
 ## yaml for ESP32-Korvo-1
 
 Put partitions_esp32.csv into folder of homeassistant\config\esphome\
-
-```
+````
 substitutions:
   name: esp32-korvo-1
   friendly_name: esp32-korvo-1
@@ -68,12 +67,16 @@ esp32:
       CONFIG_SPIRAM_SPEED_80M: y
       CONFIG_ESP_SYSTEM_PANIC_SILENT_REBOOT: y
       CONFIG_I2S_ENABLE_DEBUG_LOG: y
+      CONFIG_MODEL_IN_SPIFFS: y
 #psram:
 #  mode: octal
 #  speed: 80MHz
 external_components:
   - source: github://rpatel3001/esphome@es8311
     components: [ es8311 ]
+#  - source: github://pr#4861
+#    components: [es8311]
+#    refresh: 0s
   - source: github://rpatel3001/esphome@es7210
     components: [ es7210 ]
   - source: github://pr#5230
@@ -82,21 +85,15 @@ external_components:
 
 # Enable logging
 logger:
+  level: VERBOSE
 
 # Enable Home Assistant API
 api:
   encryption:
-<<<<<<< HEAD
     key: "vRvf5APYhFeBjsFt8zzQ6xpuiZqn3oCAIbyVHCBawWM="
 
 ota:
   password: "9522b9fe61f659e429743438edf3240e"
-=======
-    key: "encryption key"
-
-ota:
-  password: "your password"
->>>>>>> e08c3a53b9902345f6ee85ff0c2d572552a7108b
 
 wifi:
   ssid: !secret wifi_ssid
@@ -104,13 +101,8 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-<<<<<<< HEAD
     ssid: "Esp32-Korvo-1 Fallback Hotspot"
     password: "vBJEmQ5iJHQx"
-=======
-    ssid: "Esp32-Korvo-2 Fallback Hotspot"
-    password: "ap password"
->>>>>>> e08c3a53b9902345f6ee85ff0c2d572552a7108b
 
 captive_portal:
 
@@ -119,7 +111,7 @@ i2c:
     sda: GPIO19
     scl: GPIO32
     scan: true
-    frequency: 400kHz
+#    frequency: 400kHz
 
 es8311:
   address: 0x18
@@ -149,8 +141,6 @@ i2s_audio:
        allow_other_uses: true
        ignore_strapping_warning: true
 
-esp_adf:
-
 speaker:
   - platform: i2s_audio
     id: external_speaker
@@ -174,6 +164,7 @@ micro_wake_word:
     then:
       - voice_assistant.start:
           wake_word: !lambda return wake_word;
+esp_adf:
 
 voice_assistant:
   id: voice_asst
@@ -182,7 +173,7 @@ voice_assistant:
   noise_suppression_level: 2
   auto_gain: 15dBFS
   volume_multiplier: 0.5
-
+  vad_threshold: 3
   on_listening:
     - lambda: id(voice_assistant_phase) = ${voice_assist_listening_phase_id};
     - script.execute: reset_led
@@ -610,9 +601,5 @@ sensor:
           - binary_sensor.template.publish:
               id: btn_record
               state: OFF
+````
 
-<<<<<<< HEAD
-````
-=======
-````
->>>>>>> e08c3a53b9902345f6ee85ff0c2d572552a7108b
